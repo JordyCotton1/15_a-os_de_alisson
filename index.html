@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XV de Alisson | Recuerdos mágicos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <audio id="eventMusic" src="Ma Belle Evangeline.mp3" loop preload="auto"></audio>
+
+    <main class="page-shell">
+      <section class="hero" aria-label="Portada de los XV años de Alisson">
+        <div class="hero__shade"></div>
+        <div class="fireflies" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <img class="hero__princess" src="ss.png" alt="" />
+        <img class="hero__firefly" src="42b0f108af5dd2706d1ce26e3db102d5-removebg-preview.png" alt="" />
+
+        <div class="hero__content">
+          <img class="hero__logo" src="qqq.png" alt="La Princesa y el Sapo" />
+          <p class="eyebrow">Una noche llena de magia</p>
+          <h1>Los XV años de Alisson</h1>
+          <div class="event-card" aria-label="Datos del evento">
+            <span>&#128197; 16 de junio de 2026</span>
+            <span>&#128205; Salón de celebración</span>
+            <span>&#128338; 7:00 PM</span>
+          </div>
+          <p class="hero__copy">
+            Gracias por ser parte de esta noche especial. Comparte tus fotos,
+            mensajes y mejores recuerdos para que Alisson pueda revivir cada momento.
+          </p>
+          <div class="hero__actions">
+            <button class="primary-button" id="shareButton" type="button">
+              Compartir mis recuerdos
+            </button>
+            <button class="music-button" id="musicButton" type="button">
+              &#127925; Ma Belle Evangeline
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="share-section" id="compartir" aria-labelledby="shareTitle" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">&#128247; Subir foto</p>
+            <h2 id="shareTitle">Subir Recuerdo</h2>
+          </div>
+          <p class="section-note">Comparte una foto especial para Alisson.</p>
+        </div>
+
+        <form class="upload-panel" id="uploadForm">
+          <label class="drop-zone" id="dropZone" for="photoInput">
+            <input
+              id="photoInput"
+              name="photos"
+              type="file"
+              accept="image/*"
+              multiple
+            />
+            <span class="drop-zone__icon">&#128081;</span>
+            <span class="drop-zone__title">Subir Recuerdo</span>
+            <span class="drop-zone__hint">Toca aquí o arrastra tus imágenes</span>
+          </label>
+
+          <div class="form-row">
+            <label>
+              Tu nombre
+              <input
+                id="guestName"
+                type="text"
+                maxlength="35"
+                placeholder="Familia, amiga, invitado..."
+              />
+            </label>
+            <label>
+              Mensaje
+              <input
+                id="guestMessage"
+                type="text"
+                maxlength="80"
+                placeholder="Un recuerdo bonito de la fiesta"
+              />
+            </label>
+          </div>
+
+          <button class="primary-button" type="submit">Agregar a la galería</button>
+          <p class="status" id="statusMessage" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="preview-strip" id="previewStrip" hidden></div>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="galleryTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">&#10024; Recuerdos compartidos &#10024;</p>
+            <h2 id="galleryTitle">Galería de la fiesta</h2>
+          </div>
+          <button class="ghost-button" id="clearGallery" type="button">
+            Limpiar galería
+          </button>
+        </div>
+
+        <div class="stats-grid" aria-label="Contador de recuerdos">
+          <div><strong id="memoryCount">0</strong><span>&#128154; recuerdos compartidos</span></div>
+          <div><strong id="photoCount">0</strong><span>&#128247; fotografías</span></div>
+          <div><strong id="messageCount">0</strong><span>&#128140; mensajes</span></div>
+        </div>
+
+        <div class="favorite-spot" id="favoriteSpot" hidden>
+          <p class="eyebrow">&#127942; Recuerdo favorito de la noche</p>
+          <div id="favoriteCard"></div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <p class="empty-state" id="emptyState">
+          Aún no hay fotos. La primera sonrisa de la noche puede vivir aquí.
+        </p>
+      </section>
+
+      <section class="wish-section" aria-labelledby="wishTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">&#128140; Libro de deseos</p>
+            <h2 id="wishTitle">Mensajes para Alisson</h2>
+          </div>
+        </div>
+
+        <form class="wish-form" id="wishForm">
+          <label>
+            Tu nombre
+            <input
+              id="wishName"
+              type="text"
+              maxlength="35"
+              placeholder="Quien escribe este deseo"
+            />
+          </label>
+          <label>
+            Deseo
+            <textarea
+              id="wishText"
+              maxlength="180"
+              placeholder="Alisson, que todos tus sueños se hagan realidad..."
+            ></textarea>
+          </label>
+          <button class="primary-button" type="submit">Dejar deseo</button>
+        </form>
+
+        <div class="wish-grid" id="wishGrid"></div>
+        <p class="empty-state" id="wishEmpty">
+          Todavía no hay deseos escritos. Deja el primero para Alisson.
+        </p>
+      </section>
+    </main>
+
+    <template id="photoCardTemplate">
+      <article class="photo-card">
+        <div class="photo-frame">
+          <span class="crown-mark">&#128081;</span>
+          <img alt="" />
+        </div>
+        <div class="photo-card__body">
+          <strong></strong>
+          <span></span>
+          <div class="photo-actions">
+            <button type="button" class="like-button">&#9825; <b>0</b></button>
+            <button type="button" class="delete-button" aria-label="Eliminar foto">
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <template id="wishTemplate">
+      <article class="wish-card">
+        <p></p>
+        <strong></strong>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
