@@ -240,6 +240,7 @@ body[data-active-view="gallery"] .music-button {
 
 .brand-button,
 .menu-button,
+.refresh-button,
 .logout-button,
 .music-button {
   min-height: 40px;
@@ -270,12 +271,24 @@ body[data-active-view="gallery"] .music-button {
 }
 
 .menu-button,
+.refresh-button,
 .logout-button,
 .music-button {
   border-radius: 999px;
   padding: 0 0.8rem;
   font-size: 0.78rem;
   text-transform: uppercase;
+}
+
+.refresh-button {
+  border: 1px solid rgba(134, 255, 111, 0.36);
+  background: rgba(134, 255, 111, 0.08);
+  color: #bfffaa;
+}
+
+.refresh-button.is-loading {
+  opacity: 0.72;
+  pointer-events: none;
 }
 
 .logout-button {
@@ -1294,6 +1307,7 @@ h2 {
   }
 
   .menu-button,
+  .refresh-button,
   .logout-button {
     min-height: 28px;
     padding: 0 0.35rem;
@@ -1495,6 +1509,7 @@ h2 {
   }
 
   .menu-button,
+  .refresh-button,
   .logout-button {
     min-height: 26px;
     font-size: 0.5rem;

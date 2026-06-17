@@ -35,11 +35,13 @@ const loginView = document.querySelector("#loginView");
 const loginForm = document.querySelector("#loginForm");
 const loginFirstName = document.querySelector("#loginFirstName");
 const loginLastName = document.querySelector("#loginLastName");
+const refreshButton = document.querySelector("#refreshButton");
 const logoutButton = document.querySelector("#logoutButton");
 
 let selectedFiles = [];
 document.body.dataset.activeView = "home";
 let currentGuest = null;
+const SESSION_KEY = "alisson-xv-guest";
 
 function supabaseHeaders(extra = {}) {
   return {
@@ -133,6 +135,7 @@ function getGuestRole(firstName, lastName) {
 
 function applyGuestSession(guest) {
   currentGuest = guest;
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(guest));
   document.body.classList.add("is-logged-in");
   document.body.dataset.userRole = guest.role;
   loginView.hidden = true;
@@ -148,6 +151,7 @@ function applyGuestSession(guest) {
 
 function logoutGuest() {
   currentGuest = null;
+  sessionStorage.removeItem(SESSION_KEY);
   document.body.classList.remove("is-logged-in");
   delete document.body.dataset.userRole;
   document.body.dataset.activeView = "home";
@@ -334,10 +338,9 @@ function renderGallery(photos, wishes) {
     galleryGrid.append(buildPhotoCard(photo, index));
   });
 
-  const photoMessages = photos.filter((photo) => photo.message && photo.message.trim()).length;
   memoryCount.textContent = photos.length + wishes.length;
   photoCount.textContent = photos.length;
-  messageCount.textContent = photoMessages + wishes.length;
+  messageCount.textContent = wishes.length;
 }
 
 function renderWishes(wishes) {
@@ -358,6 +361,31 @@ async function loadEverything() {
   const [photos, wishes] = await Promise.all([getAll(PHOTO_STORE), getAll(WISH_STORE)]);
   renderGallery(photos, wishes);
   renderWishes(wishes);
+}
+
+async function refreshEverything() {
+  if (!currentGuest || refreshButton.classList.contains("is-loading")) return;
+
+  const label = refreshButton.textContent;
+  refreshButton.classList.add("is-loading");
+  refreshButton.textContent = "Cargando";
+  refreshButton.disabled = true;
+
+  try {
+    await loadEverything();
+    refreshButton.textContent = "Listo";
+    window.setTimeout(() => {
+      refreshButton.textContent = label;
+    }, 900);
+  } catch {
+    refreshButton.textContent = "Error";
+    window.setTimeout(() => {
+      refreshButton.textContent = label;
+    }, 1200);
+  } finally {
+    refreshButton.classList.remove("is-loading");
+    refreshButton.disabled = false;
+  }
 }
 
 function takeFiles(fileList) {
@@ -390,6 +418,7 @@ viewButtons.forEach((button) => {
 });
 
 musicButton.addEventListener("click", toggleMusic);
+refreshButton.addEventListener("click", refreshEverything);
 logoutButton.addEventListener("click", logoutGuest);
 input.addEventListener("change", () => takeFiles(input.files));
 
@@ -426,6 +455,18 @@ loginForm.addEventListener("submit", (event) => {
     setStatus("No se pudo cargar la galería en este navegador.");
   });
 });
+
+try {
+  const savedGuest = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+  if (savedGuest?.firstName && savedGuest?.lastName) {
+    applyGuestSession(savedGuest);
+    loadEverything().catch(() => {
+      setStatus("No se pudo cargar la galerÃ­a en este navegador.");
+    });
+  }
+} catch {
+  sessionStorage.removeItem(SESSION_KEY);
+}
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
