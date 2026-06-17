@@ -432,6 +432,8 @@ function unlockMusicOnce(event) {
 
   startMusic();
   document.removeEventListener("pointerdown", unlockMusicOnce);
+  document.removeEventListener("touchstart", unlockMusicOnce);
+  document.removeEventListener("click", unlockMusicOnce);
   document.removeEventListener("keydown", unlockMusicOnce);
 }
 
@@ -443,6 +445,8 @@ musicButton.addEventListener("click", toggleMusic);
 refreshButton.addEventListener("click", refreshEverything);
 logoutButton.addEventListener("click", logoutGuest);
 document.addEventListener("pointerdown", unlockMusicOnce);
+document.addEventListener("touchstart", unlockMusicOnce);
+document.addEventListener("click", unlockMusicOnce);
 document.addEventListener("keydown", unlockMusicOnce);
 startMusic();
 input.addEventListener("change", () => takeFiles(input.files));
@@ -464,6 +468,7 @@ dropZone.addEventListener("drop", (event) => {
 
 loginForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  startMusic();
 
   const firstName = loginFirstName.value.trim();
   const lastName = loginLastName.value.trim();

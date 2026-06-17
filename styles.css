@@ -454,9 +454,15 @@ h2 {
   background: url("compartir/fondo.png") center / cover no-repeat;
 }
 
-.share-view .screen-shade,
-.share-fireflies {
+.share-view .screen-shade {
   display: none;
+}
+
+.share-fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .share-view .view-content {
@@ -660,6 +666,8 @@ h2 {
 }
 
 .gallery-view .view-content {
+  position: relative;
+  z-index: 1;
   padding-top: clamp(6.2rem, 11vh, 7.5rem);
   padding-bottom: 2rem;
 }
@@ -682,6 +690,13 @@ h2 {
   width: min(1120px, calc(100% - 2rem));
   padding-top: clamp(6.4rem, 11vh, 7.8rem);
   padding-bottom: 2.5rem;
+}
+
+.wish-fireflies {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .wish-lur {
@@ -1250,7 +1265,8 @@ h2 {
   font-weight: 900;
 }
 
-.fireflies span {
+.fireflies span,
+.share-fireflies span {
   position: absolute;
   width: 7px;
   height: 7px;
@@ -1260,20 +1276,94 @@ h2 {
   animation: float 6s ease-in-out infinite;
 }
 
-.fireflies span:nth-child(1) { left: 8%; top: 22%; animation-delay: -1s; }
-.fireflies span:nth-child(2) { left: 18%; top: 72%; animation-delay: -3s; }
-.fireflies span:nth-child(3) { left: 32%; top: 35%; animation-delay: -4s; }
-.fireflies span:nth-child(4) { left: 47%; top: 16%; animation-delay: -2s; }
-.fireflies span:nth-child(5) { left: 58%; top: 58%; animation-delay: -5s; }
-.fireflies span:nth-child(6) { left: 72%; top: 28%; animation-delay: -1.5s; }
-.fireflies span:nth-child(7) { left: 84%; top: 66%; animation-delay: -3.4s; }
-.fireflies span:nth-child(8) { left: 90%; top: 18%; animation-delay: -0.6s; }
+.fireflies span:nth-child(1),
+.share-fireflies span:nth-child(1) { left: 8%; top: 22%; animation-delay: -1s; }
+.fireflies span:nth-child(2),
+.share-fireflies span:nth-child(2) { left: 18%; top: 72%; animation-delay: -3s; }
+.fireflies span:nth-child(3),
+.share-fireflies span:nth-child(3) { left: 32%; top: 35%; animation-delay: -4s; }
+.fireflies span:nth-child(4),
+.share-fireflies span:nth-child(4) { left: 47%; top: 16%; animation-delay: -2s; }
+.fireflies span:nth-child(5),
+.share-fireflies span:nth-child(5) { left: 58%; top: 58%; animation-delay: -5s; }
+.fireflies span:nth-child(6),
+.share-fireflies span:nth-child(6) { left: 72%; top: 28%; animation-delay: -1.5s; }
+.fireflies span:nth-child(7),
+.share-fireflies span:nth-child(7) { left: 84%; top: 66%; animation-delay: -3.4s; }
+.fireflies span:nth-child(8),
+.share-fireflies span:nth-child(8) { left: 90%; top: 18%; animation-delay: -0.6s; }
 .fireflies span:nth-child(9) { left: 38%; top: 82%; animation-delay: -2.8s; }
 .fireflies span:nth-child(10) { left: 68%; top: 82%; animation-delay: -4.3s; }
+
+.party-effects {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.party-effects span {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  background: #ffcf44;
+  box-shadow: 0 0 16px rgba(255, 207, 68, 0.75);
+  animation: partyFall 7s linear infinite;
+}
+
+.party-effects span:nth-child(3n) {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff4fbd;
+  box-shadow: 0 0 20px rgba(255, 79, 189, 0.8);
+}
+
+.party-effects span:nth-child(4n) {
+  background: #32f5d2;
+  box-shadow: 0 0 18px rgba(50, 245, 210, 0.72);
+}
+
+.party-effects span:nth-child(5n) {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid #ffe59a;
+  box-shadow: 0 0 24px rgba(255, 229, 154, 0.8);
+  animation-name: fireworkPop;
+}
+
+.party-effects span:nth-child(1) { left: 8%; top: -8%; animation-delay: -1s; }
+.party-effects span:nth-child(2) { left: 18%; top: -14%; animation-delay: -3.2s; }
+.party-effects span:nth-child(3) { left: 29%; top: -10%; animation-delay: -4.4s; }
+.party-effects span:nth-child(4) { left: 41%; top: -18%; animation-delay: -2.1s; }
+.party-effects span:nth-child(5) { left: 52%; top: 18%; animation-delay: -1.5s; }
+.party-effects span:nth-child(6) { left: 62%; top: -12%; animation-delay: -5.1s; }
+.party-effects span:nth-child(7) { left: 71%; top: 6%; animation-delay: -2.8s; }
+.party-effects span:nth-child(8) { left: 80%; top: -10%; animation-delay: -3.9s; }
+.party-effects span:nth-child(9) { left: 90%; top: 15%; animation-delay: -1.2s; }
+.party-effects span:nth-child(10) { left: 12%; top: 28%; animation-delay: -4.8s; }
+.party-effects span:nth-child(11) { left: 48%; top: 6%; animation-delay: -0.8s; }
+.party-effects span:nth-child(12) { left: 86%; top: 42%; animation-delay: -5.6s; }
 
 @keyframes float {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
   50% { transform: translate3d(18px, -34px, 0) scale(1.35); }
+}
+
+@keyframes partyFall {
+  0% { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: translate3d(24px, 112vh, 0) rotate(340deg); opacity: 0; }
+}
+
+@keyframes fireworkPop {
+  0%, 100% { transform: scale(0.4); opacity: 0; }
+  35% { transform: scale(1.6); opacity: 1; }
+  68% { transform: scale(2.8); opacity: 0; }
 }
 
 @media (max-width: 780px) {
@@ -1331,7 +1421,7 @@ h2 {
   .hero__content {
     width: calc(100% - 2rem);
     margin: 0 auto;
-    padding-top: 11.2rem;
+    padding-top: 12.7rem;
     padding-bottom: 12.5rem;
   }
 
@@ -1364,10 +1454,10 @@ h2 {
 
   .hero__princess {
     right: 0.2rem;
-    bottom: -0.5rem;
+    bottom: 0.9rem;
     width: min(46vw, 210px);
     min-width: 150px;
-    transform: translateX(34%);
+    transform: translateX(14%);
   }
 
   .hero__frog {
@@ -1417,7 +1507,7 @@ h2 {
   }
 
   .hero__content {
-    padding-top: clamp(9.6rem, 24svh, 11rem);
+    padding-top: clamp(11.2rem, 30svh, 13rem);
     padding-bottom: 10.5rem;
   }
 
@@ -1436,7 +1526,7 @@ h2 {
   .hero__princess {
     width: min(42vw, 185px);
     min-width: 130px;
-    transform: translateX(28%);
+    transform: translateX(10%);
   }
 
   .hero__frog {
@@ -1494,7 +1584,7 @@ h2 {
   }
 
   .wish-lur {
-    right: -3.5rem;
+    right: 0.2rem;
     width: clamp(80px, 18vw, 110px);
   }
 }
@@ -1522,7 +1612,7 @@ h2 {
   }
 
   .hero__content {
-    padding-top: 9.25rem;
+    padding-top: 11.4rem;
   }
 
   h1 {
@@ -1552,7 +1642,7 @@ h2 {
   }
 
   .hero__content {
-    padding-top: 8.6rem;
+    padding-top: 9.9rem;
     padding-bottom: 8.5rem;
   }
 
@@ -1573,7 +1663,8 @@ h2 {
   .hero__princess {
     width: min(36vw, 165px);
     min-width: 118px;
-    transform: translateX(24%);
+    bottom: 1.2rem;
+    transform: translateX(8%);
   }
 
   .hero__frog {
