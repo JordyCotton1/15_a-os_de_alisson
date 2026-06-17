@@ -36,6 +36,7 @@ const loginForm = document.querySelector("#loginForm");
 const loginFirstName = document.querySelector("#loginFirstName");
 const loginLastName = document.querySelector("#loginLastName");
 const loginSubmitButton = loginForm.querySelector("button[type='submit']");
+const lockButton = document.querySelector("#lockButton");
 const refreshButton = document.querySelector("#refreshButton");
 const logoutButton = document.querySelector("#logoutButton");
 
@@ -44,6 +45,7 @@ document.body.dataset.activeView = "home";
 let currentGuest = null;
 const SESSION_KEY = "alisson-xv-guest";
 let musicUnlocked = false;
+let guestsLocked = false;
 
 function supabaseHeaders(extra = {}) {
   return {
@@ -80,6 +82,40 @@ function getAll(storeName) {
   }
 
   return supabaseRequest("/rest/v1/wishes?select=*&order=created_at.desc");
+}
+
+async function loadGuestLock() {
+  try {
+    const rows = await supabaseRequest("/rest/v1/app_settings?select=value&key=eq.guests_locked");
+    guestsLocked = Boolean(rows?.[0]?.value);
+  } catch {
+    guestsLocked = false;
+  }
+
+  lockButton.textContent = guestsLocked ? "Abrir" : "Bloquear";
+  lockButton.classList.toggle("is-locked", guestsLocked);
+  lockButton.setAttribute(
+    "aria-label",
+    guestsLocked ? "Permitir entrada de invitados" : "Bloquear entrada de invitados"
+  );
+
+  if (guestsLocked && currentGuest?.role !== "admin") {
+    logoutGuest();
+  }
+}
+
+async function setGuestLock(locked) {
+  await supabaseRequest("/rest/v1/app_settings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify({ key: "guests_locked", value: locked }),
+  });
+  guestsLocked = locked;
+  lockButton.textContent = guestsLocked ? "Abrir" : "Bloquear";
+  lockButton.classList.toggle("is-locked", guestsLocked);
 }
 
 function saveWish(wish) {
@@ -388,6 +424,7 @@ async function refreshEverything() {
   refreshButton.disabled = true;
 
   try {
+    await loadGuestLock();
     await loadEverything();
     refreshButton.textContent = "Listo";
     window.setTimeout(() => {
@@ -401,6 +438,22 @@ async function refreshEverything() {
   } finally {
     refreshButton.classList.remove("is-loading");
     refreshButton.disabled = false;
+  }
+}
+
+async function toggleGuestLock() {
+  if (currentGuest?.role !== "admin" || lockButton.disabled) return;
+
+  lockButton.disabled = true;
+  try {
+    await setGuestLock(!guestsLocked);
+  } catch {
+    lockButton.textContent = "Error";
+    window.setTimeout(() => {
+      lockButton.textContent = guestsLocked ? "Abrir" : "Bloquear";
+    }, 1200);
+  } finally {
+    lockButton.disabled = false;
   }
 }
 
@@ -457,6 +510,7 @@ viewButtons.forEach((button) => {
 });
 
 musicButton.addEventListener("click", toggleMusic);
+lockButton.addEventListener("click", toggleGuestLock);
 refreshButton.addEventListener("click", refreshEverything);
 logoutButton.addEventListener("click", logoutGuest);
 loginSubmitButton.addEventListener("pointerdown", startMusic);
@@ -467,6 +521,7 @@ document.addEventListener("touchstart", unlockMusicOnce);
 document.addEventListener("click", unlockMusicOnce);
 document.addEventListener("keydown", unlockMusicOnce);
 startMusic();
+loadGuestLock();
 input.addEventListener("change", () => takeFiles(input.files));
 
 dropZone.addEventListener("dragover", (event) => {
@@ -484,7 +539,7 @@ dropZone.addEventListener("drop", (event) => {
   takeFiles(event.dataTransfer.files);
 });
 
-loginForm.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   startMusic();
 
@@ -497,6 +552,14 @@ loginForm.addEventListener("submit", (event) => {
     lastName,
     role: getGuestRole(firstName, lastName),
   };
+
+  await loadGuestLock();
+  if (guestsLocked && guest.role !== "admin") {
+    loginLastName.setCustomValidity("La entrada está cerrada por ahora.");
+    loginLastName.reportValidity();
+    loginLastName.setCustomValidity("");
+    return;
+  }
 
   applyGuestSession(guest);
   loadEverything().catch(() => {

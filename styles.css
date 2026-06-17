@@ -41,6 +41,10 @@ body[data-user-role="admin"] [data-view="share"] {
   display: none;
 }
 
+body:not([data-user-role="admin"]) .lock-button {
+  display: none;
+}
+
 body[data-user-role="admin"] .wish-form,
 body[data-user-role="admin"] .wish-intro {
   display: none;
@@ -240,6 +244,7 @@ body[data-active-view="gallery"] .music-button {
 
 .brand-button,
 .menu-button,
+.lock-button,
 .refresh-button,
 .logout-button,
 .music-button {
@@ -271,6 +276,7 @@ body[data-active-view="gallery"] .music-button {
 }
 
 .menu-button,
+.lock-button,
 .refresh-button,
 .logout-button,
 .music-button {
@@ -278,6 +284,18 @@ body[data-active-view="gallery"] .music-button {
   padding: 0 0.8rem;
   font-size: 0.78rem;
   text-transform: uppercase;
+}
+
+.lock-button {
+  border: 1px solid rgba(255, 79, 189, 0.38);
+  background: rgba(255, 79, 189, 0.1);
+  color: #ffc6e9;
+}
+
+.lock-button.is-locked {
+  border-color: rgba(134, 255, 111, 0.44);
+  background: rgba(134, 255, 111, 0.1);
+  color: #bfffaa;
 }
 
 .refresh-button {
@@ -1416,6 +1434,7 @@ h2 {
   }
 
   .menu-button,
+  .lock-button,
   .refresh-button,
   .logout-button {
     min-height: 28px;
@@ -1644,6 +1663,7 @@ h2 {
   }
 
   .menu-button,
+  .lock-button,
   .refresh-button,
   .logout-button {
     min-height: 26px;
