@@ -3,8 +3,8 @@ const PHOTO_STORE = "photos";
 const WISH_STORE = "wishes";
 const DB_VERSION = 2;
 
-const uploadSection = document.querySelector("#compartir");
-const shareButton = document.querySelector("#shareButton");
+const viewPanels = document.querySelectorAll("[data-view-panel]");
+const viewButtons = document.querySelectorAll("[data-view]");
 const form = document.querySelector("#uploadForm");
 const input = document.querySelector("#photoInput");
 const dropZone = document.querySelector("#dropZone");
@@ -14,13 +14,10 @@ const statusMessage = document.querySelector("#statusMessage");
 const galleryGrid = document.querySelector("#galleryGrid");
 const previewStrip = document.querySelector("#previewStrip");
 const emptyState = document.querySelector("#emptyState");
-const clearGallery = document.querySelector("#clearGallery");
 const template = document.querySelector("#photoCardTemplate");
 const memoryCount = document.querySelector("#memoryCount");
 const photoCount = document.querySelector("#photoCount");
 const messageCount = document.querySelector("#messageCount");
-const favoriteSpot = document.querySelector("#favoriteSpot");
-const favoriteCard = document.querySelector("#favoriteCard");
 const wishForm = document.querySelector("#wishForm");
 const wishName = document.querySelector("#wishName");
 const wishText = document.querySelector("#wishText");
@@ -29,8 +26,19 @@ const wishEmpty = document.querySelector("#wishEmpty");
 const wishTemplate = document.querySelector("#wishTemplate");
 const musicButton = document.querySelector("#musicButton");
 const eventMusic = document.querySelector("#eventMusic");
+const photoModal = document.querySelector("#photoModal");
+const modalPhoto = document.querySelector("#modalPhoto");
+const closePhotoModal = document.querySelector("#closePhotoModal");
+const photoModalBackdrop = document.querySelector(".photo-modal__backdrop");
+const loginView = document.querySelector("#loginView");
+const loginForm = document.querySelector("#loginForm");
+const loginFirstName = document.querySelector("#loginFirstName");
+const loginLastName = document.querySelector("#loginLastName");
+const logoutButton = document.querySelector("#logoutButton");
 
 let selectedFiles = [];
+document.body.dataset.activeView = "home";
+let currentGuest = null;
 
 function openDatabase() {
   return new Promise((resolve, reject) => {
@@ -88,8 +96,49 @@ function deletePhoto(id) {
   return withStore(PHOTO_STORE, "readwrite", (store) => store.delete(id));
 }
 
-function clearPhotos() {
-  return withStore(PHOTO_STORE, "readwrite", (store) => store.clear());
+function normalizeName(value) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function getGuestRole(firstName, lastName) {
+  return normalizeName(`${firstName} ${lastName}`) === "xv anera" ? "admin" : "guest";
+}
+
+function applyGuestSession(guest) {
+  currentGuest = guest;
+  document.body.classList.add("is-logged-in");
+  document.body.dataset.userRole = guest.role;
+  loginView.hidden = true;
+
+  const fullName = `${guest.firstName} ${guest.lastName}`.trim();
+  guestName.value = fullName;
+  wishName.value = fullName;
+
+  if (guest.role === "admin" && document.body.dataset.activeView === "share") {
+    showView("gallery");
+  }
+}
+
+function logoutGuest() {
+  currentGuest = null;
+  document.body.classList.remove("is-logged-in");
+  delete document.body.dataset.userRole;
+  document.body.dataset.activeView = "home";
+  loginView.hidden = false;
+  loginForm.reset();
+  resetUploadForm();
+  wishName.value = "";
+  viewPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.viewPanel === "home");
+  });
+  viewButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.view === "home");
+  });
 }
 
 function fileToDataUrl(file) {
@@ -105,16 +154,31 @@ function setStatus(message) {
   statusMessage.textContent = message;
 }
 
-function showUploadSection() {
-  uploadSection.hidden = false;
-  uploadSection.scrollIntoView({ behavior: "smooth", block: "start" });
-  setStatus("Elige tus fotos y escribe un mensaje para Alisson.");
+function showView(viewName) {
+  if (currentGuest?.role === "admin" && viewName === "share") {
+    viewName = "gallery";
+  }
+
+  document.body.dataset.activeView = viewName;
+
+  viewPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.viewPanel === viewName);
+    panel.scrollTop = 0;
+  });
+
+  viewButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.view === viewName);
+  });
+
+  if (viewName === "share") {
+    setStatus("Elige tus fotos y escribe un mensaje para Alisson.");
+  }
 }
 
-function hideUploadSection() {
-  uploadSection.hidden = true;
+function resetUploadForm() {
   selectedFiles = [];
   input.value = "";
+  guestName.value = currentGuest ? `${currentGuest.firstName} ${currentGuest.lastName}`.trim() : "";
   guestMessage.value = "";
   renderPreview();
 }
@@ -132,9 +196,25 @@ function renderPreview() {
   });
 }
 
+function openPhotoModal(photo) {
+  modalPhoto.src = photo.dataUrl;
+  modalPhoto.alt = photo.message
+    ? `Foto subida por ${photo.name}: ${photo.message}`
+    : `Foto subida por ${photo.name}`;
+  photoModal.hidden = false;
+  closePhotoModal.focus();
+}
+
+function hidePhotoModal() {
+  photoModal.hidden = true;
+  modalPhoto.removeAttribute("src");
+  modalPhoto.alt = "";
+}
+
 function buildPhotoCard(photo, index = 0) {
   const card = template.content.firstElementChild.cloneNode(true);
-  const img = card.querySelector("img");
+  const photoFrame = card.querySelector(".photo-frame");
+  const img = card.querySelector(".uploaded-photo");
   const name = card.querySelector("strong");
   const message = card.querySelector("span");
   const likeButton = card.querySelector(".like-button");
@@ -146,15 +226,18 @@ function buildPhotoCard(photo, index = 0) {
   img.alt = photo.message
     ? `Foto subida por ${photo.name}: ${photo.message}`
     : `Foto subida por ${photo.name}`;
-  name.textContent = `Escrito por ${photo.name}`;
-  message.textContent = photo.message || "Gracias por compartir este momento.";
+  name.textContent = photo.message || "Gracias por compartir este momento.";
+  message.textContent = `Escrito por ${photo.name}`;
   likeCount.textContent = photo.likes || 0;
+
+  photoFrame.addEventListener("click", () => openPhotoModal(photo));
 
   likeButton.addEventListener("click", async () => {
     await saveItem(PHOTO_STORE, { ...photo, likes: (photo.likes || 0) + 1 });
     await loadEverything();
   });
 
+  deleteButton.hidden = currentGuest?.role !== "admin";
   deleteButton.addEventListener("click", async () => {
     await deletePhoto(photo.id);
     await loadEverything();
@@ -163,23 +246,10 @@ function buildPhotoCard(photo, index = 0) {
   return card;
 }
 
-function renderFavorite(photos) {
-  const favorite = photos
-    .filter((photo) => photo.likes > 0)
-    .sort((a, b) => b.likes - a.likes || b.createdAt - a.createdAt)[0];
-
-  favoriteCard.innerHTML = "";
-  favoriteSpot.hidden = !favorite;
-  if (!favorite) return;
-
-  favoriteCard.append(buildPhotoCard(favorite, 0));
-}
-
 function renderGallery(photos, wishes) {
   const sortedPhotos = [...photos].sort((a, b) => b.createdAt - a.createdAt);
   galleryGrid.innerHTML = "";
   emptyState.hidden = photos.length > 0;
-  clearGallery.hidden = photos.length === 0;
 
   sortedPhotos.forEach((photo, index) => {
     galleryGrid.append(buildPhotoCard(photo, index));
@@ -189,7 +259,6 @@ function renderGallery(photos, wishes) {
   memoryCount.textContent = photos.length + wishes.length;
   photoCount.textContent = photos.length;
   messageCount.textContent = photoMessages + wishes.length;
-  renderFavorite(photos);
 }
 
 function renderWishes(wishes) {
@@ -225,20 +294,24 @@ function takeFiles(fileList) {
 async function toggleMusic() {
   if (!eventMusic.paused) {
     eventMusic.pause();
-    musicButton.innerHTML = "&#127925; Ma Belle Evangeline";
+    musicButton.textContent = "♪";
     return;
   }
 
   try {
     await eventMusic.play();
-    musicButton.textContent = "Pausar canción";
+    musicButton.textContent = "Ⅱ";
   } catch {
-    musicButton.textContent = "Activa el sonido";
+    musicButton.textContent = "♪";
   }
 }
 
-shareButton.addEventListener("click", showUploadSection);
+viewButtons.forEach((button) => {
+  button.addEventListener("click", () => showView(button.dataset.view));
+});
+
 musicButton.addEventListener("click", toggleMusic);
+logoutButton.addEventListener("click", logoutGuest);
 input.addEventListener("change", () => takeFiles(input.files));
 
 dropZone.addEventListener("dragover", (event) => {
@@ -254,6 +327,25 @@ dropZone.addEventListener("drop", (event) => {
   event.preventDefault();
   dropZone.classList.remove("is-dragging");
   takeFiles(event.dataTransfer.files);
+});
+
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const firstName = loginFirstName.value.trim();
+  const lastName = loginLastName.value.trim();
+  if (!firstName || !lastName) return;
+
+  const guest = {
+    firstName,
+    lastName,
+    role: getGuestRole(firstName, lastName),
+  };
+
+  applyGuestSession(guest);
+  loadEverything().catch(() => {
+    setStatus("No se pudo cargar la galería en este navegador.");
+  });
 });
 
 form.addEventListener("submit", async (event) => {
@@ -283,8 +375,8 @@ form.addEventListener("submit", async (event) => {
   }
 
   await loadEverything();
-  hideUploadSection();
-  document.querySelector("#galleryTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+  resetUploadForm();
+  showView("gallery");
 });
 
 wishForm.addEventListener("submit", async (event) => {
@@ -304,16 +396,11 @@ wishForm.addEventListener("submit", async (event) => {
   await loadEverything();
 });
 
-clearGallery.addEventListener("click", async () => {
-  const shouldClear = confirm("¿Quieres borrar todas las fotos guardadas en este navegador?");
-  if (!shouldClear) return;
+closePhotoModal.addEventListener("click", hidePhotoModal);
+photoModalBackdrop.addEventListener("click", hidePhotoModal);
 
-  await clearPhotos();
-  await loadEverything();
-});
-
-loadEverything().catch(() => {
-  if (!uploadSection.hidden) {
-    setStatus("No se pudo cargar la galería en este navegador.");
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !photoModal.hidden) {
+    hidePhotoModal();
   }
 });
