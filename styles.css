@@ -1620,8 +1620,7 @@ h2 {
   }
 
   .wish-lur {
-    right: 0.2rem;
-    width: clamp(80px, 18vw, 110px);
+    display: none;
   }
 }
 
