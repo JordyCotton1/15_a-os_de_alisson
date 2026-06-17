@@ -1133,21 +1133,27 @@ h2 {
 }
 
 .wish-card {
+  position: relative;
   min-height: 140px;
   padding: 1.1rem;
   border: 1px solid rgba(212, 175, 55, 0.48);
   border-radius: 14px;
   background: rgba(4, 44, 35, 0.78);
   color: #fff7df;
+  overflow: hidden;
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
 }
 
 .wish-card p {
+  position: relative;
+  z-index: 1;
   margin: 0;
   line-height: 1.55;
 }
 
 .wish-card strong {
+  position: relative;
+  z-index: 1;
   color: var(--gold-light);
 }
 
@@ -1581,6 +1587,32 @@ h2 {
 
   .wish-form {
     padding: 1rem;
+  }
+
+  .wish-card {
+    min-height: 150px;
+    padding: 1.25rem 6.2rem 1.25rem 1.25rem;
+  }
+
+  .wish-card::after {
+    content: "";
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    width: clamp(82px, 24vw, 118px);
+    aspect-ratio: 1 / 1.35;
+    background: url("lur.png") center / contain no-repeat;
+    opacity: 0.25;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .wish-card p {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+  }
+
+  .wish-card strong {
+    font-size: clamp(1.15rem, 4.8vw, 1.55rem);
   }
 
   .wish-lur {

@@ -35,6 +35,7 @@ const loginView = document.querySelector("#loginView");
 const loginForm = document.querySelector("#loginForm");
 const loginFirstName = document.querySelector("#loginFirstName");
 const loginLastName = document.querySelector("#loginLastName");
+const loginSubmitButton = loginForm.querySelector("button[type='submit']");
 const refreshButton = document.querySelector("#refreshButton");
 const logoutButton = document.querySelector("#logoutButton");
 
@@ -444,6 +445,9 @@ viewButtons.forEach((button) => {
 musicButton.addEventListener("click", toggleMusic);
 refreshButton.addEventListener("click", refreshEverything);
 logoutButton.addEventListener("click", logoutGuest);
+loginSubmitButton.addEventListener("pointerdown", startMusic);
+loginSubmitButton.addEventListener("touchstart", startMusic);
+loginSubmitButton.addEventListener("click", startMusic);
 document.addEventListener("pointerdown", unlockMusicOnce);
 document.addEventListener("touchstart", unlockMusicOnce);
 document.addEventListener("click", unlockMusicOnce);
