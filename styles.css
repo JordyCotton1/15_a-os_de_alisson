@@ -1157,10 +1157,6 @@ h2 {
   color: var(--gold-light);
 }
 
-.wish-card__lur {
-  display: none;
-}
-
 .empty-state {
   margin: 2rem 0 0;
   padding: 2rem;
@@ -1598,13 +1594,14 @@ h2 {
     padding: 1.25rem 6.2rem 1.25rem 1.25rem;
   }
 
-  .wish-card__lur {
+  .wish-card::after {
+    content: "";
     position: absolute;
-    display: block;
     right: 0.8rem;
     top: 50%;
     width: clamp(82px, 24vw, 118px);
-    height: auto;
+    aspect-ratio: 1 / 1.35;
+    background: url("lur.png") center / contain no-repeat;
     opacity: 0.25;
     transform: translateY(-50%);
     pointer-events: none;
