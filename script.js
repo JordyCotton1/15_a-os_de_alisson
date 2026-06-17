@@ -42,6 +42,7 @@ let selectedFiles = [];
 document.body.dataset.activeView = "home";
 let currentGuest = null;
 const SESSION_KEY = "alisson-xv-guest";
+let musicUnlocked = false;
 
 function supabaseHeaders(extra = {}) {
   return {
@@ -407,10 +408,31 @@ async function toggleMusic() {
 
   try {
     await eventMusic.play();
+    musicUnlocked = true;
     musicButton.textContent = "Ⅱ";
   } catch {
     musicButton.textContent = "♪";
   }
+}
+
+async function startMusic() {
+  if (musicUnlocked || !eventMusic.paused) return;
+
+  try {
+    await eventMusic.play();
+    musicUnlocked = true;
+    musicButton.textContent = "Ⅱ";
+  } catch {
+    musicButton.textContent = "♪";
+  }
+}
+
+function unlockMusicOnce(event) {
+  if (event.target.closest("#musicButton")) return;
+
+  startMusic();
+  document.removeEventListener("pointerdown", unlockMusicOnce);
+  document.removeEventListener("keydown", unlockMusicOnce);
 }
 
 viewButtons.forEach((button) => {
@@ -420,6 +442,9 @@ viewButtons.forEach((button) => {
 musicButton.addEventListener("click", toggleMusic);
 refreshButton.addEventListener("click", refreshEverything);
 logoutButton.addEventListener("click", logoutGuest);
+document.addEventListener("pointerdown", unlockMusicOnce);
+document.addEventListener("keydown", unlockMusicOnce);
+startMusic();
 input.addEventListener("change", () => takeFiles(input.files));
 
 dropZone.addEventListener("dragover", (event) => {
