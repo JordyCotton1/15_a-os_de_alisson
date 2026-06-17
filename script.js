@@ -47,6 +47,19 @@ const SESSION_KEY = "alisson-xv-guest";
 let musicUnlocked = false;
 let guestsLocked = false;
 
+document.querySelectorAll("img[data-fallback-src]").forEach((image) => {
+  image.addEventListener(
+    "error",
+    () => {
+      const fallback = image.dataset.fallbackSrc;
+      if (fallback && image.src !== fallback) {
+        image.src = fallback;
+      }
+    },
+    { once: true }
+  );
+});
+
 function supabaseHeaders(extra = {}) {
   return {
     apikey: SUPABASE_KEY,

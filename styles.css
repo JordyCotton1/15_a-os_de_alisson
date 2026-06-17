@@ -68,7 +68,8 @@ body[data-user-role="admin"] .wish-heading {
   padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
   background:
     linear-gradient(90deg, rgba(1, 14, 16, 0.38), rgba(1, 16, 18, 0.08), rgba(1, 14, 16, 0.34)),
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_login.png") center / cover no-repeat;
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_login.png") center / cover no-repeat,
+    url("login/fondo.png") center / cover no-repeat;
   overflow: hidden;
 }
 
@@ -79,7 +80,9 @@ body[data-user-role="admin"] .wish-heading {
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante_login.png") center / contain no-repeat;
+  background:
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante_login.png") center / contain no-repeat,
+    url("login/delante.png") center / contain no-repeat;
   box-shadow: none;
 }
 
@@ -363,7 +366,9 @@ body[data-active-view="gallery"] .music-button {
 
 /* Inicio */
 .hero {
-  background-image: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/qq.png");
+  background-image:
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/qq.png"),
+    url("qq.png");
 }
 
 .corner-logo {
@@ -469,7 +474,9 @@ h2 {
 
 /* Compartir */
 .share-view {
-  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_compartir.png") center / cover no-repeat;
+  background:
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_compartir.png") center / cover no-repeat,
+    url("compartir/fondo.png") center / cover no-repeat;
 }
 
 .share-view .screen-shade {
@@ -500,7 +507,9 @@ h2 {
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante-clean.png") center / contain no-repeat;
+  background:
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante-clean.png") center / contain no-repeat,
+    url("compartir/delante-clean.png") center / contain no-repeat;
   box-shadow: none;
 }
 
@@ -673,7 +682,9 @@ h2 {
 /* Galeria y mensajes */
 .gallery-view {
   overflow-y: auto;
-  background-image: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/Fondo%20_galeria.png");
+  background-image:
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/Fondo%20_galeria.png"),
+    url("galeria/Fondo.png");
 }
 
 .gallery-view .screen-shade {
@@ -692,7 +703,9 @@ h2 {
 
 .wish-view {
   overflow-y: auto;
-  background-image: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_mensaje.png");
+  background-image:
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_mensaje.png"),
+    url("mensajes/fondo.png");
 }
 
 .wish-view .screen-shade {
