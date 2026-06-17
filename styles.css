@@ -1061,6 +1061,15 @@ h2 {
   display: none;
 }
 
+.wish-delete-button {
+  position: relative;
+  z-index: 2;
+  justify-self: end;
+  width: auto;
+  min-height: 36px;
+  padding: 0 1rem;
+}
+
 .wish-form {
   display: grid;
   gap: 1.2rem;

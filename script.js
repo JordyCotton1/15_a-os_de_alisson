@@ -122,6 +122,13 @@ async function deletePhoto(photo) {
   }
 }
 
+function deleteWish(wish) {
+  return supabaseRequest(`/rest/v1/wishes?id=eq.${wish.id}`, {
+    method: "DELETE",
+    headers: { Prefer: "return=minimal" },
+  });
+}
+
 function normalizeName(value) {
   return value
     .normalize("NFD")
@@ -353,8 +360,15 @@ function renderWishes(wishes) {
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .forEach((wish) => {
       const card = wishTemplate.content.firstElementChild.cloneNode(true);
+      const deleteButton = card.querySelector(".wish-delete-button");
       card.querySelector("p").textContent = `"${wish.text}"`;
       card.querySelector("strong").textContent = `Con cariño, ${wish.name}`;
+      deleteButton.hidden = currentGuest?.role !== "admin";
+      deleteButton.addEventListener("click", async () => {
+        if (currentGuest?.role !== "admin") return;
+        await deleteWish(wish);
+        await loadEverything();
+      });
       wishGrid.append(card);
     });
 }
