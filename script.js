@@ -1,7 +1,8 @@
-const DB_NAME = "alisson-xv-gallery";
+const SUPABASE_URL = "https://dxdmodawgdyfeswowhmy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_37O1kElPeLZ0woeY3ixmaw_77-95XwH";
+const SUPABASE_BUCKET = "photos";
 const PHOTO_STORE = "photos";
 const WISH_STORE = "wishes";
-const DB_VERSION = 2;
 
 const viewPanels = document.querySelectorAll("[data-view-panel]");
 const viewButtons = document.querySelectorAll("[data-view]");
@@ -40,60 +41,81 @@ let selectedFiles = [];
 document.body.dataset.activeView = "home";
 let currentGuest = null;
 
-function openDatabase() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(PHOTO_STORE)) {
-        db.createObjectStore(PHOTO_STORE, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(WISH_STORE)) {
-        db.createObjectStore(WISH_STORE, { keyPath: "id" });
-      }
-    };
-
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
+function supabaseHeaders(extra = {}) {
+  return {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`,
+    ...extra,
+  };
 }
 
-async function withStore(storeName, mode, callback) {
-  const db = await openDatabase();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(storeName, mode);
-    const store = transaction.objectStore(storeName);
-    const result = callback(store);
-
-    transaction.oncomplete = () => {
-      db.close();
-      resolve(result);
-    };
-    transaction.onerror = () => {
-      db.close();
-      reject(transaction.error);
-    };
+async function supabaseRequest(path, options = {}) {
+  const response = await fetch(`${SUPABASE_URL}${path}`, {
+    ...options,
+    headers: supabaseHeaders(options.headers),
   });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `Supabase request failed: ${response.status}`);
+  }
+
+  if (response.status === 204) return null;
+
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
 }
 
-function requestToPromise(request) {
-  return new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
+function getPublicPhotoUrl(path) {
+  return `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${path}`;
 }
 
 function getAll(storeName) {
-  return withStore(storeName, "readonly", (store) => requestToPromise(store.getAll()));
+  if (storeName === PHOTO_STORE) {
+    return supabaseRequest("/rest/v1/photos?select=*&order=created_at.desc");
+  }
+
+  return supabaseRequest("/rest/v1/wishes?select=*&order=created_at.desc");
 }
 
-function saveItem(storeName, item) {
-  return withStore(storeName, "readwrite", (store) => store.put(item));
+function saveWish(wish) {
+  return supabaseRequest("/rest/v1/wishes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      name: wish.name,
+      text: wish.text,
+    }),
+  });
 }
 
-function deletePhoto(id) {
-  return withStore(PHOTO_STORE, "readwrite", (store) => store.delete(id));
+function updatePhotoLikes(photo) {
+  return supabaseRequest(`/rest/v1/photos?id=eq.${photo.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({ likes: (photo.likes || 0) + 1 }),
+  });
+}
+
+async function deletePhoto(photo) {
+  await supabaseRequest(`/rest/v1/photos?id=eq.${photo.id}`, {
+    method: "DELETE",
+    headers: { Prefer: "return=minimal" },
+  });
+
+  if (photo.image_path) {
+    await supabaseRequest(`/storage/v1/object/${SUPABASE_BUCKET}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prefixes: [photo.image_path] }),
+    });
+  }
 }
 
 function normalizeName(value) {
@@ -141,12 +163,68 @@ function logoutGuest() {
   });
 }
 
-function fileToDataUrl(file) {
+function imageToElement(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("No se pudo leer la imagen."));
+    };
+    image.src = url;
+  });
+}
+
+async function compressImage(file) {
+  try {
+    const image = await imageToElement(file);
+    const maxSize = 1400;
+    const ratio = Math.min(1, maxSize / Math.max(image.width, image.height));
+    const width = Math.round(image.width * ratio);
+    const height = Math.round(image.height * ratio);
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    context.drawImage(image, 0, 0, width, height);
+
+    return await new Promise((resolve) => {
+      canvas.toBlob((blob) => resolve(blob || file), "image/jpeg", 0.78);
+    });
+  } catch {
+    return file;
+  }
+}
+
+async function uploadPhoto(file, name, message) {
+  const imageBlob = await compressImage(file);
+  const path = `${Date.now()}-${crypto.randomUUID()}.jpg`;
+
+  await supabaseRequest(`/storage/v1/object/${SUPABASE_BUCKET}/${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": imageBlob.type || "image/jpeg",
+      "x-upsert": "false",
+    },
+    body: imageBlob,
+  });
+
+  await supabaseRequest("/rest/v1/photos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      name,
+      message,
+      image_path: path,
+      likes: 0,
+    }),
   });
 }
 
@@ -197,7 +275,7 @@ function renderPreview() {
 }
 
 function openPhotoModal(photo) {
-  modalPhoto.src = photo.dataUrl;
+  modalPhoto.src = getPublicPhotoUrl(photo.image_path);
   modalPhoto.alt = photo.message
     ? `Foto subida por ${photo.name}: ${photo.message}`
     : `Foto subida por ${photo.name}`;
@@ -222,7 +300,7 @@ function buildPhotoCard(photo, index = 0) {
   const deleteButton = card.querySelector(".delete-button");
 
   card.style.setProperty("--tilt", `${[-1.6, 1.2, -0.6, 1.8][index % 4]}deg`);
-  img.src = photo.dataUrl;
+  img.src = getPublicPhotoUrl(photo.image_path);
   img.alt = photo.message
     ? `Foto subida por ${photo.name}: ${photo.message}`
     : `Foto subida por ${photo.name}`;
@@ -233,13 +311,14 @@ function buildPhotoCard(photo, index = 0) {
   photoFrame.addEventListener("click", () => openPhotoModal(photo));
 
   likeButton.addEventListener("click", async () => {
-    await saveItem(PHOTO_STORE, { ...photo, likes: (photo.likes || 0) + 1 });
+    await updatePhotoLikes(photo);
     await loadEverything();
   });
 
   deleteButton.hidden = currentGuest?.role !== "admin";
   deleteButton.addEventListener("click", async () => {
-    await deletePhoto(photo.id);
+    if (currentGuest?.role !== "admin") return;
+    await deletePhoto(photo);
     await loadEverything();
   });
 
@@ -247,7 +326,7 @@ function buildPhotoCard(photo, index = 0) {
 }
 
 function renderGallery(photos, wishes) {
-  const sortedPhotos = [...photos].sort((a, b) => b.createdAt - a.createdAt);
+  const sortedPhotos = [...photos].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   galleryGrid.innerHTML = "";
   emptyState.hidden = photos.length > 0;
 
@@ -266,7 +345,7 @@ function renderWishes(wishes) {
   wishEmpty.hidden = wishes.length > 0;
 
   [...wishes]
-    .sort((a, b) => b.createdAt - a.createdAt)
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .forEach((wish) => {
       const card = wishTemplate.content.firstElementChild.cloneNode(true);
       card.querySelector("p").textContent = `"${wish.text}"`;
@@ -361,22 +440,17 @@ form.addEventListener("submit", async (event) => {
 
   setStatus("Guardando recuerdos...");
 
-  for (const file of selectedFiles) {
-    const dataUrl = await fileToDataUrl(file);
-    await saveItem(PHOTO_STORE, {
-      id: crypto.randomUUID(),
-      dataUrl,
-      name,
-      message,
-      likes: 0,
-      fileName: file.name,
-      createdAt: Date.now(),
-    });
-  }
+  try {
+    for (const file of selectedFiles) {
+      await uploadPhoto(file, name, message);
+    }
 
-  await loadEverything();
-  resetUploadForm();
-  showView("gallery");
+    await loadEverything();
+    resetUploadForm();
+    showView("gallery");
+  } catch {
+    setStatus("No se pudo subir la foto. Revisa la conexión o permisos de Supabase.");
+  }
 });
 
 wishForm.addEventListener("submit", async (event) => {
@@ -385,15 +459,19 @@ wishForm.addEventListener("submit", async (event) => {
   const text = wishText.value.trim();
   if (!text) return;
 
-  await saveItem(WISH_STORE, {
-    id: crypto.randomUUID(),
-    name: wishName.value.trim() || "Invitado especial",
-    text,
-    createdAt: Date.now(),
-  });
+  try {
+    await saveWish({
+      name: wishName.value.trim() || "Invitado especial",
+      text,
+    });
 
-  wishText.value = "";
-  await loadEverything();
+    wishText.value = "";
+    await loadEverything();
+  } catch {
+    wishText.setCustomValidity("No se pudo guardar el mensaje. Revisa Supabase.");
+    wishText.reportValidity();
+    wishText.setCustomValidity("");
+  }
 });
 
 closePhotoModal.addEventListener("click", hidePhotoModal);
