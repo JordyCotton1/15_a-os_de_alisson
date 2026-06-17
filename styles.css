@@ -1157,6 +1157,10 @@ h2 {
   color: var(--gold-light);
 }
 
+.wish-card__lur {
+  display: none !important;
+}
+
 .empty-state {
   margin: 2rem 0 0;
   padding: 2rem;
