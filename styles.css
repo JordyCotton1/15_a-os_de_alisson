@@ -68,7 +68,7 @@ body[data-user-role="admin"] .wish-heading {
   padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
   background:
     linear-gradient(90deg, rgba(1, 14, 16, 0.38), rgba(1, 16, 18, 0.08), rgba(1, 14, 16, 0.34)),
-    url("login/fondo.png") center / cover no-repeat;
+    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_login.png") center / cover no-repeat;
   overflow: hidden;
 }
 
@@ -79,7 +79,7 @@ body[data-user-role="admin"] .wish-heading {
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: url("login/delante.png") center / contain no-repeat;
+  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante_login.png") center / contain no-repeat;
   box-shadow: none;
 }
 
@@ -363,7 +363,7 @@ body[data-active-view="gallery"] .music-button {
 
 /* Inicio */
 .hero {
-  background-image: url("qq.png");
+  background-image: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/qq.png");
 }
 
 .corner-logo {
@@ -469,7 +469,7 @@ h2 {
 
 /* Compartir */
 .share-view {
-  background: url("compartir/fondo.png") center / cover no-repeat;
+  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_compartir.png") center / cover no-repeat;
 }
 
 .share-view .screen-shade {
@@ -500,7 +500,7 @@ h2 {
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: url("compartir/delante-clean.png") center / contain no-repeat;
+  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante-clean.png") center / contain no-repeat;
   box-shadow: none;
 }
 
@@ -673,7 +673,7 @@ h2 {
 /* Galeria y mensajes */
 .gallery-view {
   overflow-y: auto;
-  background-image: url("galeria/Fondo.png");
+  background-image: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/Fondo%20_galeria.png");
 }
 
 .gallery-view .screen-shade {
@@ -692,7 +692,7 @@ h2 {
 
 .wish-view {
   overflow-y: auto;
-  background-image: url("mensajes/fondo.png");
+  background-image: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_mensaje.png");
 }
 
 .wish-view .screen-shade {
@@ -1234,7 +1234,7 @@ h2 {
   width: min(150px, 42vw);
   height: 52px;
   margin: 0 auto 0.7rem;
-  background: url("galeria/corona.png") center / contain no-repeat;
+  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/corona.png") center / contain no-repeat;
 }
 
 .gallery-view .empty-state::after {
@@ -1633,7 +1633,7 @@ h2 {
     top: 50%;
     width: clamp(82px, 24vw, 118px);
     aspect-ratio: 1 / 1.35;
-    background: url("lur.png") center / contain no-repeat;
+    background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/lur.png") center / contain no-repeat;
     opacity: 0.25;
     transform: translateY(-50%);
     pointer-events: none;
