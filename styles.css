@@ -1247,7 +1247,7 @@ h2 {
   width: min(150px, 42vw);
   height: 52px;
   margin: 0 auto 0.7rem;
-  background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/corona.png") center / contain no-repeat;
+  background: url("galeria/corona.png") center / contain no-repeat;
 }
 
 .gallery-view .empty-state::after {
@@ -1646,7 +1646,7 @@ h2 {
     top: 50%;
     width: clamp(82px, 24vw, 118px);
     aspect-ratio: 1 / 1.35;
-    background: url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/lur.png") center / contain no-repeat;
+    background: url("lur.png") center / contain no-repeat;
     opacity: 0.25;
     transform: translateY(-50%);
     pointer-events: none;
