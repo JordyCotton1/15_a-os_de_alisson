@@ -41,7 +41,8 @@ const refreshButton = document.querySelector("#refreshButton");
 const logoutButton = document.querySelector("#logoutButton");
 
 let selectedFiles = [];
-document.body.dataset.activeView = "home";
+const DEFAULT_VIEW = "share";
+document.body.dataset.activeView = DEFAULT_VIEW;
 let currentGuest = null;
 const SESSION_KEY = "alisson-xv-guest";
 let musicUnlocked = false;
@@ -212,16 +213,16 @@ function logoutGuest() {
   sessionStorage.removeItem(SESSION_KEY);
   document.body.classList.remove("is-logged-in");
   delete document.body.dataset.userRole;
-  document.body.dataset.activeView = "home";
+  document.body.dataset.activeView = DEFAULT_VIEW;
   loginView.hidden = false;
   loginForm.reset();
   resetUploadForm();
   wishName.value = "";
   viewPanels.forEach((panel) => {
-    panel.classList.toggle("is-active", panel.dataset.viewPanel === "home");
+    panel.classList.toggle("is-active", panel.dataset.viewPanel === DEFAULT_VIEW);
   });
   viewButtons.forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.view === "home");
+    button.classList.toggle("is-active", button.dataset.view === DEFAULT_VIEW);
   });
 }
 
@@ -429,7 +430,7 @@ async function loadEverything() {
 }
 
 async function refreshEverything() {
-  if (!currentGuest || refreshButton.classList.contains("is-loading")) return;
+  if (!currentGuest || !refreshButton || refreshButton.classList.contains("is-loading")) return;
 
   const label = refreshButton.textContent;
   refreshButton.classList.add("is-loading");
@@ -524,8 +525,8 @@ viewButtons.forEach((button) => {
 
 musicButton.addEventListener("click", toggleMusic);
 lockButton.addEventListener("click", toggleGuestLock);
-refreshButton.addEventListener("click", refreshEverything);
-logoutButton.addEventListener("click", logoutGuest);
+refreshButton?.addEventListener("click", refreshEverything);
+logoutButton?.addEventListener("click", logoutGuest);
 loginSubmitButton.addEventListener("pointerdown", startMusic);
 loginSubmitButton.addEventListener("touchstart", startMusic);
 loginSubmitButton.addEventListener("click", startMusic);
@@ -558,7 +559,7 @@ loginForm.addEventListener("submit", async (event) => {
 
   const firstName = loginFirstName.value.trim();
   const lastName = loginLastName.value.trim();
-  if (!firstName || !lastName) return;
+  if (!firstName) return;
 
   const guest = {
     firstName,
@@ -568,9 +569,9 @@ loginForm.addEventListener("submit", async (event) => {
 
   await loadGuestLock();
   if (guestsLocked && guest.role !== "admin") {
-    loginLastName.setCustomValidity("La entrada está cerrada por ahora.");
-    loginLastName.reportValidity();
-    loginLastName.setCustomValidity("");
+    loginFirstName.setCustomValidity("La entrada está cerrada por ahora.");
+    loginFirstName.reportValidity();
+    loginFirstName.setCustomValidity("");
     return;
   }
 
@@ -582,7 +583,7 @@ loginForm.addEventListener("submit", async (event) => {
 
 try {
   const savedGuest = JSON.parse(sessionStorage.getItem(SESSION_KEY));
-  if (savedGuest?.firstName && savedGuest?.lastName) {
+  if (savedGuest?.firstName) {
     applyGuestSession(savedGuest);
     loadEverything().catch(() => {
       setStatus("No se pudo cargar la galerÃ­a en este navegador.");

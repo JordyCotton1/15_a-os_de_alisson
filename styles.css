@@ -107,9 +107,9 @@ body[data-user-role="admin"] .wish-heading {
 .login-field {
   position: absolute;
   display: block;
-  left: 29%;
-  width: 39%;
-  height: 5.6%;
+  left: 24%;
+  width: 47.5%;
+  height: 6.2%;
   padding: 0;
 }
 
@@ -122,11 +122,7 @@ body[data-user-role="admin"] .wish-heading {
 }
 
 .login-field:nth-child(1) {
-  top: 58.7%;
-}
-
-.login-field:nth-child(2) {
-  top: 68.8%;
+  top: 49.8%;
 }
 
 .login-field::before,
@@ -139,11 +135,11 @@ body[data-user-role="admin"] .wish-heading {
   height: 100%;
   min-height: 0;
   border: 0;
-  border-radius: 14px;
-  padding: 0.05rem 1rem 0 15%;
+  border-radius: 18px;
+  padding: 0.05rem 1rem 0;
   background: transparent !important;
-  color: #fff;
-  font-size: clamp(0.82rem, 1.35vw, 1.18rem);
+  color: #061d1b;
+  font-size: clamp(1rem, 1.75vw, 1.6rem);
   font-weight: 700;
   line-height: 1;
   text-align: center;
@@ -155,7 +151,7 @@ body[data-user-role="admin"] .wish-heading {
 }
 
 .login-field input:focus {
-  box-shadow: 0 0 0 2px rgba(255, 229, 154, 0.46);
+  box-shadow: none;
 }
 
 .login-field input:not(:placeholder-shown) {
@@ -168,16 +164,16 @@ body[data-user-role="admin"] .wish-heading {
 .login-field input:-webkit-autofill:hover,
 .login-field input:-webkit-autofill:focus {
   -webkit-text-fill-color: #061d1b;
-  box-shadow: 0 0 0 1000px #eef4ff inset, 0 0 0 2px rgba(255, 229, 154, 0.46);
+  box-shadow: 0 0 0 1000px #eef4ff inset;
   transition: background-color 9999s ease-out;
 }
 
 .login-form button {
   position: absolute;
-  left: 29%;
-  top: 79.5%;
-  width: 39%;
-  height: 8.4%;
+  left: 16.6%;
+  top: 64.9%;
+  width: 61.2%;
+  height: 8.6%;
   min-height: 0;
   margin: 0;
   border: 0;
@@ -189,8 +185,7 @@ body[data-user-role="admin"] .wish-heading {
 
 .login-form button:hover,
 .login-form button:focus-visible {
-  outline: 2px solid rgba(255, 247, 230, 0.62);
-  outline-offset: -8px;
+  outline: 0;
 }
 
 button,
@@ -539,8 +534,7 @@ h2 {
 
 .share-view .drop-zone:hover,
 .share-view .drop-zone.is-dragging {
-  outline: 2px solid rgba(255, 229, 154, 0.55);
-  outline-offset: -8px;
+  outline: 0;
 }
 
 .drop-zone input {
@@ -602,21 +596,21 @@ h2 {
 }
 
 .share-view input[type="text"]:focus {
-  background: #eef4ff !important;
-  color: #b7821f !important;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.42);
+  background: transparent !important;
+  color: var(--gold-light) !important;
+  box-shadow: none;
 }
 
 .share-view input[type="text"]:valid {
-  background: #eef4ff !important;
-  color: #b7821f !important;
+  background: transparent !important;
+  color: var(--gold-light) !important;
 }
 
 .share-view input[type="text"]:-webkit-autofill,
 .share-view input[type="text"]:-webkit-autofill:hover,
 .share-view input[type="text"]:-webkit-autofill:focus {
-  -webkit-text-fill-color: #b7821f;
-  box-shadow: 0 0 0 1000px #eef4ff inset;
+  -webkit-text-fill-color: #ffe59a;
+  box-shadow: 0 0 0 1000px transparent inset;
   transition: background-color 9999s ease-out;
 }
 
@@ -647,8 +641,12 @@ h2 {
 }
 
 .share-view .primary-button:hover {
-  outline: 2px solid rgba(255, 247, 230, 0.58);
-  outline-offset: -8px;
+  outline: 0;
+}
+
+.share-view .primary-button:focus-visible,
+.share-view .drop-zone:focus-within {
+  outline: 0;
 }
 
 .share-view .status {
@@ -1420,48 +1418,48 @@ h2 {
   .main-menu {
     align-items: stretch;
     top: 0.5rem;
-    width: min(440px, calc(100% - 1rem));
+    width: min(440px, calc(100% - 0.6rem));
     min-height: 0;
-    border-radius: 18px;
+    border-radius: 20px;
     flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.5rem;
+    gap: 0.55rem;
+    padding: 0.75rem;
   }
 
   .brand-button {
     justify-content: center;
-    min-height: 30px;
+    min-height: 38px;
     padding: 0;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
   }
 
   .brand-button span {
-    font-size: 1.05rem;
+    font-size: 1.25rem;
   }
 
   .menu-actions {
     display: grid;
     width: 100%;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.25rem;
+    gap: 0.45rem;
   }
 
   .menu-button,
   .lock-button,
   .refresh-button,
   .logout-button {
-    min-height: 28px;
-    padding: 0 0.35rem;
-    font-size: 0.56rem;
+    min-height: 38px;
+    padding: 0 0.55rem;
+    font-size: 0.74rem;
     line-height: 1;
   }
 
   .music-button {
     justify-self: center;
-    width: 32px;
-    min-height: 32px;
+    width: 40px;
+    min-height: 40px;
     padding: 0;
-    font-size: 0.92rem;
+    font-size: 1.08rem;
   }
 
   .corner-logo {
@@ -1519,12 +1517,12 @@ h2 {
   }
 
   .share-view .view-content {
-    padding: 7rem 0.55rem 0.55rem;
+    padding: 6.25rem 0 0.55rem;
   }
 
   .share-view .upload-panel {
-    width: min(calc(100vw - 1.1rem), calc((var(--viewport-h) - 7.6rem) * 1.2105));
-    max-height: calc(var(--viewport-h) - 7.6rem);
+    width: min(calc(100vw - 0.9rem), calc((var(--viewport-h) - 6.8rem) * 1.2105));
+    max-height: calc(var(--viewport-h) - 6.8rem);
   }
 
   .share-view .preview-strip {
@@ -1550,11 +1548,20 @@ h2 {
   }
 
   .main-menu {
-    width: min(390px, calc(100% - 0.75rem));
+    width: min(430px, calc(100% - 0.5rem));
   }
 
   .menu-actions {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .share-view .view-content {
+    padding-top: 5.85rem;
+  }
+
+  .share-view .upload-panel {
+    width: min(calc(100vw - 0.7rem), calc((var(--viewport-h) - 6.3rem) * 1.2105));
+    max-height: calc(var(--viewport-h) - 6.3rem);
   }
 
   .hero__content {
@@ -1591,13 +1598,13 @@ h2 {
   }
 
   .login-field {
-    left: 29%;
-    width: 39%;
+    left: 24%;
+    width: 47.5%;
   }
 
   .login-form button {
-    left: 29%;
-    width: 39%;
+    left: 16.6%;
+    width: 61.2%;
   }
 
   .gallery-view .view-content,
@@ -1672,20 +1679,20 @@ h2 {
   }
 
   .brand-button {
-    font-size: 0.78rem;
+    font-size: 0.94rem;
   }
 
   .menu-button,
   .lock-button,
   .refresh-button,
   .logout-button {
-    min-height: 26px;
-    font-size: 0.5rem;
+    min-height: 34px;
+    font-size: 0.66rem;
   }
 
   .music-button {
-    width: 30px;
-    min-height: 30px;
+    width: 36px;
+    min-height: 36px;
   }
 
   .hero__content {

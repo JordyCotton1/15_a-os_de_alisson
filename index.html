@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="favicon.png?v=3" />
-    <link rel="shortcut icon" href="favicon.ico?v=3" />
+    <link rel="icon" href="favicon.ico?v=4" sizes="any" />
+    <link rel="shortcut icon" href="favicon.ico?v=4" />
     <title>XV de Alisson | Recuerdos mágicos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,43 +27,37 @@
         <form class="login-form" id="loginForm">
           <label class="login-field">
             <span>Nombre</span>
-            <input id="loginFirstName" type="text" maxlength="30" autocomplete="given-name" placeholder="Nombre" required />
+            <input id="loginFirstName" type="text" maxlength="70" autocomplete="name" placeholder="Nombre y Apellido" required />
           </label>
-          <label class="login-field">
-            <span>Apellido</span>
-            <input id="loginLastName" type="text" maxlength="35" autocomplete="family-name" placeholder="Apellido" required />
-          </label>
+          <input id="loginLastName" type="hidden" value="" />
           <button type="submit">Entrar a la fiesta</button>
         </form>
       </div>
     </section>
 
     <nav class="main-menu" aria-label="Menú principal">
-      <button class="brand-button" type="button" data-view="home">
+      <button class="brand-button" type="button" data-view="share">
         <span>♕</span> Mis XV años
       </button>
       <div class="menu-actions">
-        <button class="menu-button is-active" type="button" data-view="home">Inicio</button>
-        <button class="menu-button" type="button" data-view="share">Compartir</button>
+        <button class="menu-button is-active" type="button" data-view="share">Compartir</button>
         <button class="menu-button" type="button" data-view="gallery">Galería</button>
         <button class="menu-button" type="button" data-view="wishes">Mensajes</button>
         <button class="lock-button" id="lockButton" type="button">Bloquear</button>
-        <button class="refresh-button" id="refreshButton" type="button">Actualizar</button>
-        <button class="logout-button" id="logoutButton" type="button">Salir</button>
         <button class="music-button" id="musicButton" type="button" aria-label="Música">♪</button>
       </div>
     </nav>
 
     <main class="page-shell">
-      <section class="view hero is-active" id="homeView" data-view-panel="home">
+      <section class="view hero" id="homeView" data-view-panel="home">
         <div class="screen-shade"></div>
         <div class="fireflies" aria-hidden="true">
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-        <img class="corner-logo" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/logo.png" data-fallback-src="logo.png" alt="La Princesa y el Sapo" />
-        <img class="hero__frog" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/sapo.png" data-fallback-src="sapo.png" alt="" />
-        <img class="hero__princess" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/ss.png" data-fallback-src="ss.png" alt="" />
+        <img class="corner-logo" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/logo.png" data-fallback-src="inicio/logo.png" alt="La Princesa y el Sapo" />
+        <img class="hero__frog" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/sapo.png" data-fallback-src="inicio/sapo.png" alt="" />
+        <img class="hero__princess" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/ss.png" data-fallback-src="inicio/ss.png" alt="" />
 
         <div class="hero__content">
           <p class="eyebrow">Una noche llena de magia</p>
@@ -80,7 +74,7 @@
         </div>
       </section>
 
-      <section class="view share-view" id="shareView" data-view-panel="share">
+      <section class="view share-view is-active" id="shareView" data-view-panel="share">
         <div class="screen-shade"></div>
         <div class="share-fireflies" aria-hidden="true">
           <span></span><span></span><span></span><span></span>
