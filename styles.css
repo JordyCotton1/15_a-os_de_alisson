@@ -577,29 +577,34 @@ h2 {
   border: 0;
   border-radius: 14px;
   padding: 0.2rem 1.05rem 0;
-  background: #eef4ff !important;
-  color: #061d1b !important;
-  caret-color: #061d1b;
+  background: rgba(3, 28, 22, 0.72) !important;
+  color: #fff7df !important;
+  caret-color: #ffe59a;
   font-size: clamp(0.72rem, 1vw, 0.96rem);
   font-weight: 700;
   outline: none;
   pointer-events: auto;
-  box-shadow: inset 0 0 0 1px rgba(255, 229, 154, 0.5), 0 4px 10px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 198, 42, 0.62), 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
 .share-view input[type="text"]::placeholder {
-  color: rgba(6, 29, 27, 0.58);
+  color: rgba(255, 247, 223, 0.72);
 }
 
 .share-view input[type="text"]:focus {
-  background: #eef4ff !important;
-  color: #061d1b !important;
+  background: rgba(3, 28, 22, 0.72) !important;
+  color: #fff7df !important;
   box-shadow: inset 0 0 0 2px rgba(255, 213, 74, 0.72), 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
 .share-view input[type="text"]:valid {
   background: #eef4ff !important;
   color: #061d1b !important;
+}
+
+.share-view input[type="text"]:placeholder-shown {
+  background: rgba(3, 28, 22, 0.72) !important;
+  color: #fff7df !important;
 }
 
 .share-view input[type="text"]:-webkit-autofill,
