@@ -3,6 +3,7 @@ const SUPABASE_KEY = "sb_publishable_37O1kElPeLZ0woeY3ixmaw_77-95XwH";
 const SUPABASE_BUCKET = "photos";
 const PHOTO_STORE = "photos";
 const WISH_STORE = "wishes";
+const LIKE_STORE_KEY = "alisson-xv-liked-photos";
 
 const viewPanels = document.querySelectorAll("[data-view-panel]");
 const viewButtons = document.querySelectorAll("[data-view]");
@@ -192,6 +193,38 @@ function getGuestRole(firstName, lastName) {
   return normalizeName(`${firstName} ${lastName}`) === "xv anera" ? "admin" : "guest";
 }
 
+function getGuestLikeId() {
+  if (!currentGuest) return "guest";
+  return normalizeName(`${currentGuest.firstName} ${currentGuest.lastName}`) || "guest";
+}
+
+function getLikedPhotos() {
+  try {
+    return JSON.parse(localStorage.getItem(LIKE_STORE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function hasLikedPhoto(photo) {
+  const likedPhotos = getLikedPhotos();
+  return Boolean(likedPhotos[getGuestLikeId()]?.[photo.id]);
+}
+
+function rememberLikedPhoto(photo) {
+  try {
+    const likedPhotos = getLikedPhotos();
+    const guestId = getGuestLikeId();
+    likedPhotos[guestId] = {
+      ...(likedPhotos[guestId] || {}),
+      [photo.id]: true,
+    };
+    localStorage.setItem(LIKE_STORE_KEY, JSON.stringify(likedPhotos));
+  } catch {
+    return;
+  }
+}
+
 function applyGuestSession(guest) {
   currentGuest = guest;
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(guest));
@@ -361,6 +394,7 @@ function buildPhotoCard(photo, index = 0) {
   const likeButton = card.querySelector(".like-button");
   const likeCount = card.querySelector(".like-button b");
   const deleteButton = card.querySelector(".delete-button");
+  const likedByCurrentGuest = hasLikedPhoto(photo);
 
   card.style.setProperty("--tilt", `${[-1.6, 1.2, -0.6, 1.8][index % 4]}deg`);
   img.src = getPublicPhotoUrl(photo.image_path);
@@ -370,12 +404,27 @@ function buildPhotoCard(photo, index = 0) {
   name.textContent = photo.message || "Gracias por compartir este momento.";
   message.textContent = `Escrito por ${photo.name}`;
   likeCount.textContent = photo.likes || 0;
+  likeButton.classList.toggle("is-liked", likedByCurrentGuest);
+  likeButton.setAttribute("aria-pressed", String(likedByCurrentGuest));
+  likeButton.setAttribute(
+    "aria-label",
+    likedByCurrentGuest ? "Ya diste corazón a esta foto" : "Dar corazón a esta foto"
+  );
+  likeButton.firstChild.textContent = likedByCurrentGuest ? "♥ " : "♡ ";
 
   photoFrame.addEventListener("click", () => openPhotoModal(photo));
 
   likeButton.addEventListener("click", async () => {
-    await updatePhotoLikes(photo);
-    await loadEverything();
+    if (hasLikedPhoto(photo)) return;
+    likeButton.disabled = true;
+    try {
+      await updatePhotoLikes(photo);
+      rememberLikedPhoto(photo);
+      likeButton.setAttribute("aria-pressed", "true");
+      await loadEverything();
+    } catch {
+      likeButton.disabled = false;
+    }
   });
 
   deleteButton.hidden = currentGuest?.role !== "admin";

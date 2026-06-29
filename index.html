@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="favicon.ico?v=4" sizes="any" />
     <link rel="shortcut icon" href="favicon.ico?v=4" />
+    <link rel="preload" as="image" href="login/fondo.png" />
+    <link rel="preload" as="image" href="login/delante.png" />
+    <link rel="preload" as="image" href="compartir/fondo.png" />
+    <link rel="preload" as="image" href="compartir/delante-clean.png" />
     <title>XV de Alisson | Recuerdos mágicos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,14 +16,14 @@
       href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=small-assets-local-1" />
+    <link rel="stylesheet" href="styles.css?v=local-images-likes-1" />
   </head>
   <body>
     <audio id="eventMusic" src="Ma Belle Evangeline.mp3" loop preload="auto"></audio>
 
     <section class="login-view" id="loginView" aria-labelledby="loginTitle">
       <div class="login-panel">
-        <img class="login-crown" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/corona.png" data-fallback-src="galeria/corona.png" alt="" />
+        <img class="login-crown" src="galeria/corona.png" alt="" decoding="sync" />
         <p class="login-kicker">Bienvenido a mis</p>
         <h1 id="loginTitle">XV años</h1>
         <p class="login-copy">Escribe tu nombre para continuar</p>
@@ -55,9 +59,9 @@
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-        <img class="corner-logo" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/logo.png" data-fallback-src="inicio/logo.png" alt="La Princesa y el Sapo" />
-        <img class="hero__frog" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/sapo.png" data-fallback-src="inicio/sapo.png" alt="" />
-        <img class="hero__princess" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/ss.png" data-fallback-src="inicio/ss.png" alt="" />
+        <img class="corner-logo" src="logo.png" alt="La Princesa y el Sapo" decoding="sync" fetchpriority="high" />
+        <img class="hero__frog" src="sapo.png" alt="" decoding="sync" />
+        <img class="hero__princess" src="ss.png" alt="" decoding="sync" />
 
         <div class="hero__content">
           <p class="eyebrow">Una noche llena de magia</p>
@@ -161,7 +165,7 @@
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-        <img class="wish-lur" src="https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/lur.png" data-fallback-src="lur.png" alt="" />
+        <img class="wish-lur" src="lur.png" alt="" decoding="async" />
         <div class="view-content">
           <div class="section-heading wish-heading">
             <div>
@@ -227,6 +231,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=small-assets-local-1"></script>
+    <script src="script.js?v=local-images-likes-1"></script>
   </body>
 </html>

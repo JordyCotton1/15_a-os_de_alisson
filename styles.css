@@ -68,7 +68,6 @@ body[data-user-role="admin"] .wish-heading {
   padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
   background:
     linear-gradient(90deg, rgba(1, 14, 16, 0.38), rgba(1, 16, 18, 0.08), rgba(1, 14, 16, 0.34)),
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_login.png") center / cover no-repeat,
     url("login/fondo.png") center / cover no-repeat;
   overflow: hidden;
 }
@@ -81,7 +80,6 @@ body[data-user-role="admin"] .wish-heading {
   border: 0;
   border-radius: 0;
   background:
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante_login.png") center / contain no-repeat,
     url("login/delante.png") center / contain no-repeat;
   box-shadow: none;
 }
@@ -362,7 +360,6 @@ body[data-active-view="gallery"] .music-button {
 /* Inicio */
 .hero {
   background-image:
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/qq.png"),
     url("qq.png");
 }
 
@@ -470,7 +467,6 @@ h2 {
 /* Compartir */
 .share-view {
   background:
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_compartir.png") center / cover no-repeat,
     url("compartir/fondo.png") center / cover no-repeat;
 }
 
@@ -503,7 +499,6 @@ h2 {
   border: 0;
   border-radius: 0;
   background:
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/delante-clean.png") center / contain no-repeat,
     url("compartir/delante-clean.png") center / contain no-repeat;
   box-shadow: none;
 }
@@ -551,7 +546,7 @@ h2 {
 
 .share-view .form-row label {
   position: absolute;
-  z-index: 8;
+  z-index: 12;
   display: block;
   padding: 0;
   color: transparent;
@@ -582,35 +577,36 @@ h2 {
   border: 0;
   border-radius: 14px;
   padding: 0.2rem 1.05rem 0;
-  background: transparent !important;
-  color: var(--gold-light) !important;
-  caret-color: #ffe59a;
+  background: #eef4ff !important;
+  color: #061d1b !important;
+  caret-color: #061d1b;
   font-size: clamp(0.72rem, 1vw, 0.96rem);
   font-weight: 700;
   outline: none;
   pointer-events: auto;
+  box-shadow: inset 0 0 0 1px rgba(255, 229, 154, 0.5), 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
 .share-view input[type="text"]::placeholder {
-  color: transparent;
+  color: rgba(6, 29, 27, 0.58);
 }
 
 .share-view input[type="text"]:focus {
-  background: transparent !important;
-  color: var(--gold-light) !important;
-  box-shadow: none;
+  background: #eef4ff !important;
+  color: #061d1b !important;
+  box-shadow: inset 0 0 0 2px rgba(255, 213, 74, 0.72), 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
 .share-view input[type="text"]:valid {
-  background: transparent !important;
-  color: var(--gold-light) !important;
+  background: #eef4ff !important;
+  color: #061d1b !important;
 }
 
 .share-view input[type="text"]:-webkit-autofill,
 .share-view input[type="text"]:-webkit-autofill:hover,
 .share-view input[type="text"]:-webkit-autofill:focus {
-  -webkit-text-fill-color: #ffe59a;
-  box-shadow: 0 0 0 1000px transparent inset;
+  -webkit-text-fill-color: #061d1b;
+  box-shadow: 0 0 0 1000px #eef4ff inset;
   transition: background-color 9999s ease-out;
 }
 
@@ -681,7 +677,6 @@ h2 {
 .gallery-view {
   overflow-y: auto;
   background-image:
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/Fondo%20_galeria.png"),
     url("galeria/Fondo.png");
 }
 
@@ -702,7 +697,6 @@ h2 {
 .wish-view {
   overflow-y: auto;
   background-image:
-    url("https://dxdmodawgdyfeswowhmy.supabase.co/storage/v1/object/public/assets/fondo_mensaje.png"),
     url("mensajes/fondo.png");
 }
 
@@ -1078,6 +1072,20 @@ h2 {
   min-width: 86px;
   color: #6d123f;
   font-size: 1.2rem;
+}
+
+.like-button.is-liked {
+  border-color: rgba(255, 205, 64, 0.92);
+  background: linear-gradient(180deg, #ffeaa0, #dca124);
+  color: #7a2f00;
+  text-shadow: 0 0 8px rgba(255, 244, 188, 0.8);
+  box-shadow:
+    0 0 16px rgba(255, 205, 64, 0.62),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.48);
+}
+
+.like-button:disabled {
+  cursor: default;
 }
 
 .delete-button {
